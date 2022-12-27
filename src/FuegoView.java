@@ -1,6 +1,6 @@
 import javax.swing.*;
 
-public class FuegoView extends JFrame {
+public class FuegoView extends JFrame implements Runnable{
 //Crear
 
     public FuegoView(){
@@ -16,6 +16,11 @@ public class FuegoView extends JFrame {
         fuego.run();
 
 
+
+    }
+
+    @Override
+    public void run() {
 
     }
 }
