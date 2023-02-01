@@ -9,15 +9,21 @@ public class FuegoView extends JFrame implements Runnable{
     }
     public void CrearMiventana(){
         setTitle("Miventana");
-//        this.setLayout(new GridBagLayout());
+        //setLayout(new GridBagLayout());
+       /* GridBagConstraints c = new GridBagConstraints();
+        c.fill = GridBagConstraints.BOTH;
+        //cada elemento se genera en el elemento y
+        c.weighty = 0;
+        c.weightx = 0;*/
         setSize(500,500);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
 
         FuegoModel fuego = new FuegoModel();
-        this.getContentPane().add(fuego);
-        this.add(fuego);
+        getContentPane().add(fuego);
+
         this.setVisible(true);
         fuego.run();
+
 
 
 
