@@ -1,33 +1,32 @@
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
+import java.io.File;
+import java.io.IOException;
 
 public class FuegoView extends JFrame implements Runnable{
 //Crear
-
     public FuegoView(){
         CrearMiventana();
     }
     public void CrearMiventana(){
-        setTitle("Miventana");
-        //setLayout(new GridBagLayout());
-       /* GridBagConstraints c = new GridBagConstraints();
-        c.fill = GridBagConstraints.BOTH;
-        //cada elemento se genera en el elemento y
-        c.weighty = 0;
-        c.weightx = 0;*/
+        setTitle("Java Fuego");
+
         setSize(500,500);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-
-        FuegoModel fuego = new FuegoModel();
-        getContentPane().add(fuego);
-
+        setPreferredSize(new Dimension(500,500));
+        FuegoModel fuegoModel = new FuegoModel();
         this.setVisible(true);
-        fuego.run();
+        Thread thread = new Thread(fuegoModel);
+        getContentPane().add(fuegoModel);
+        thread.start();
 
 
 
 
     }
+
+
 
     @Override
     public void run() {
