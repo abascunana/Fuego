@@ -7,18 +7,8 @@ import java.util.Random;
 
 public class FuegoModel extends Canvas implements Runnable {
     private int[][] data;
-    private int[][] data2;
-
     private Graphics2D canvasGraphics;
-    private Image backgroundImage;
 
-    public FuegoModel() {
-        try {
-            backgroundImage = ImageIO.read(new File("src/props/background.jpg"));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
 
     public void Pintar() {
         this.setBackground(Color.black);
@@ -30,7 +20,7 @@ public class FuegoModel extends Canvas implements Runnable {
         ArrayList<Color> colors = new ArrayList<>();
         for (int i = 0; i < 256; i++) {
             int alpha = i;
-            Color color = new Color(255, 0, 0, i);
+            Color color = new Color(255, 0, 0, alpha);
             colors.add(color);
         }
 
@@ -43,7 +33,7 @@ public class FuegoModel extends Canvas implements Runnable {
             try {
                 for (int j = getHeight()-10; j < getHeight(); j++) {
                     int porciento = r.nextInt(100);
-                    if (porciento < 10) {
+                    if (porciento < 20) {
                         data[i][j] = 255;
                     }
 
@@ -54,15 +44,17 @@ public class FuegoModel extends Canvas implements Runnable {
             }
 
         }
-
+        try {
+            Thread.sleep(50);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
         for (int i = 1; i < getWidth()-1; i++) {
             for (int j = getHeight()-4 ; j >= 0; j--) {
-                int porciento = r.nextInt(100);
+                int porciento = r.nextInt(101);
                 if (porciento < 100) {
-
                     data[i+1][j] = (data[i][j+1] + data[i-1][j] + data[i][j + 1] + data[i+1][j + 1]) / 4;
-                    data2 = data;
-                    canvasGraphics.setColor(colors.get(data2[i][j]));
+                    canvasGraphics.setColor(colors.get(data[i][j]));
                     canvasGraphics.drawRect(i, j, 1, 100);
                 }
             }
@@ -72,11 +64,7 @@ public class FuegoModel extends Canvas implements Runnable {
 
     }
 
-    @Override
-    public void paint(Graphics g) {
-        super.paint(g);
-        g.drawImage(backgroundImage, 0, 0, null);
-    }
+
 
     @Override
     public void run() {
