@@ -6,12 +6,13 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
 
-public class FuegoView extends JFrame implements Runnable, ActionListener {
+public class FuegoView extends JFrame implements ActionListener {
     private JButton bkill;
     private JButton bback;
     private JButton bfire;
     private JColorChooser colorChooser;
     private FuegoModel fuegoModel;
+    private FuegoController fuegoController;
     //Crear
     public FuegoView(){
         CrearMiventana();
@@ -24,12 +25,16 @@ public class FuegoView extends JFrame implements Runnable, ActionListener {
         setPreferredSize(new Dimension(700,700));
 
         Componentes();
+
         fuegoModel = new FuegoModel();
 
+        fuegoController = new FuegoController(fuegoModel);
         Thread thread = new Thread(fuegoModel);
+        Thread threadc = new Thread(fuegoController);
         getContentPane().add(fuegoModel);
         this.setVisible(true);
         thread.start();
+        threadc.start();
 
 
 
@@ -63,11 +68,11 @@ public class FuegoView extends JFrame implements Runnable, ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == this.bback) {
-        fuegoModel.setColorBC(colorChooser.getColor());
+        fuegoController.setColorBC(colorChooser.getColor());
 
         }
         if (e.getSource() == this.bfire) {
-            fuegoModel.setColorFr(colorChooser.getColor());
+            fuegoController.setColorFr(colorChooser.getColor());
 
         }
 
@@ -75,8 +80,5 @@ public class FuegoView extends JFrame implements Runnable, ActionListener {
 
 
 
-    @Override
-    public void run() {
-        //Enviar todo
-    }
+
 }
