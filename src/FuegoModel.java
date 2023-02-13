@@ -59,12 +59,12 @@ public class FuegoModel extends Canvas implements Runnable {
         data = new int[getWidth()][getHeight()];
         data2 = new int[data[0].length][data[1].length];
 
-        // Inicialización de los puntos de llama
+        // Inicialización de los puntos de llama en el
         for (int i = 0; i < data[0].length; i++) {
             try {
-                for (int j =data[1].length-10; j < data[1].length; j++) {
+                for (int j =data[1].length-4; j < data[1].length; j++) {
                     int porciento = r.nextInt(100);
-                    if (porciento < 20) {
+                    if (porciento < 50) {
                         if (!deadFire){
                             data[i][j] = 255;
                         }
@@ -81,14 +81,14 @@ public class FuegoModel extends Canvas implements Runnable {
 
         // Propagación del fuego
         for (int i = 1; i < data[0].length-1; i++) {
-            for (int j = data[1].length-4 ; j >= 0; j--) {
+            for (int j = data[1].length-2 ; j >= 0; j--) {
                 int porciento = r.nextInt(101);
-                if (porciento < 97) {
+                if (porciento < 95) {
                     data2[i][j] = data[i][j];
                     canvasGraphics.setColor(colors.get(data2[i][j]));
                     data[i+1][j] = (data[i][j+1] + data[i-1][j] + data[i][j + 1] + data[i+1][j + 1]) / 4;
                     // Copia los datos a la matriz temporal antes de hacer los cálculos
-                    canvasGraphics.drawRect(i, j, 1, 10);
+                    canvasGraphics.drawRect(i, j, 1, 1);
 
 
                 }
