@@ -13,6 +13,7 @@ public class FuegoView extends JFrame implements ActionListener {
     private JColorChooser colorChooser;
     private FuegoModel fuegoModel;
     private FuegoController fuegoController;
+
     //Crear
     public FuegoView(){
         CrearMiventana();
@@ -74,6 +75,9 @@ public class FuegoView extends JFrame implements ActionListener {
         if (e.getSource() == this.bfire) {
             fuegoController.setColorFr(colorChooser.getColor());
 
+        }
+        if (e.getSource() == this.bkill){
+            fuegoController.setDeadFire();
         }
 
         }

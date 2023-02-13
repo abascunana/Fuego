@@ -14,16 +14,22 @@ public class FuegoModel extends Canvas implements Runnable {
     private Color colorBC;
     private Color colorFr;
 
+    private boolean deadFire;
     public void setColorFr(Color colorFr) {
         this.colorFr = colorFr;
     }
+
+    public void setDeadFire(boolean deadFire) {
+        this.deadFire = deadFire;
+    }
+
 
     public void setColorBC(Color colorBC) {
         this.colorBC = colorBC;
     }
 
     public void Pintar(Graphics g) {
-        setSize(new Dimension(500,500));
+        setSize(new Dimension(400,400));
         canvasGraphics = (Graphics2D) g;
         if (colorBC!=null){
             this.setBackground(colorBC);
@@ -33,11 +39,7 @@ public class FuegoModel extends Canvas implements Runnable {
         }
 
         Random r = new Random();
-        try {
-            Thread.sleep(10);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
+
         // Paleta de colores
         ArrayList<Color> colors = new ArrayList<>();
         for (int i = 0; i < 256; i++) {
@@ -54,16 +56,19 @@ public class FuegoModel extends Canvas implements Runnable {
         }
 
         // Creación de la matriz de temperatura
-        data = new int[500][500];
+        data = new int[getWidth()][getHeight()];
         data2 = new int[data[0].length][data[1].length];
 
         // Inicialización de los puntos de llama
-        for (int i = 0; i < 500; i++) {
+        for (int i = 0; i < data[0].length; i++) {
             try {
-                for (int j = 500-10; j < 500; j++) {
+                for (int j =data[1].length-10; j < data[1].length; j++) {
                     int porciento = r.nextInt(100);
-                    if (porciento < 30) {
-                        data[i][j] = 255;
+                    if (porciento < 20) {
+                        if (!deadFire){
+                            data[i][j] = 255;
+                        }
+
                     }
 
                 }
@@ -75,15 +80,15 @@ public class FuegoModel extends Canvas implements Runnable {
         }
 
         // Propagación del fuego
-        for (int i = 1; i < 500-1; i++) {
-            for (int j = 500-4 ; j >= 0; j--) {
+        for (int i = 1; i < data[0].length-1; i++) {
+            for (int j = data[1].length-4 ; j >= 0; j--) {
                 int porciento = r.nextInt(101);
-                if (porciento < 95) {
+                if (porciento < 97) {
                     data2[i][j] = data[i][j];
                     canvasGraphics.setColor(colors.get(data2[i][j]));
                     data[i+1][j] = (data[i][j+1] + data[i-1][j] + data[i][j + 1] + data[i+1][j + 1]) / 4;
                     // Copia los datos a la matriz temporal antes de hacer los cálculos
-                    canvasGraphics.drawRect(i, j, 1, 50);
+                    canvasGraphics.drawRect(i, j, 1, 10);
 
 
                 }
