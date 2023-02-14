@@ -60,19 +60,23 @@ public class FuegoModel extends Canvas implements Runnable {
         }
 
         Random r = new Random();
-
+        //TODO varios colores 3 o 4 para cada temperatura esencial y luego
         // Paleta de colores
         ArrayList<Color> colors = new ArrayList<>();
         for (int i = 0; i < 256; i++) {
             int alpha = i;
-            Color color;
-            if (colorFr != null){
-                color = new Color(colorFr.getRed(), colorFr.getGreen(), colorFr.getBlue(), alpha);
+            Color color = null;
+            if (i<100){
+                color = new Color( 255, 0, 0, alpha);
             }
-            //Default
-            else {
-                color = new Color(255, 0, 0, alpha);
+            else if (100<i && i<150){
+                color = new Color( 255, 255, 0, alpha);
             }
+            else if (100<i && i<250){
+                color = new Color( 255, 255, 155, alpha);
+            }
+
+
 
             colors.add(color);
         }
@@ -101,7 +105,7 @@ public class FuegoModel extends Canvas implements Runnable {
             }
 
         }
-
+//i width j height
         // Propagación del fuego
         for (int i = 1; i < data[0].length-1; i++) {
             for (int j = data[1].length-2 ; j >= 0; j--) {
@@ -128,15 +132,12 @@ public class FuegoModel extends Canvas implements Runnable {
 
     @Override
     public void paint(Graphics g) {
-
-
     }
 
     @Override
     public void run() {
         while (true) {
            Pintar(getGraphics());
-
         }
     }
 }
