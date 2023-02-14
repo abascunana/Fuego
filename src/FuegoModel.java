@@ -6,6 +6,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class FuegoModel extends Canvas implements Runnable {
     private int[][] data;
@@ -13,7 +15,25 @@ public class FuegoModel extends Canvas implements Runnable {
     private int[][] data2;
     private Color colorBC;
     private Color colorFr;
+    private FuegoView fuegoView;
 
+    public FuegoView getFuegoView() {
+        return fuegoView;
+    }
+
+    public void setFuegoView(FuegoView fuegoView) {
+        this.fuegoView = fuegoView;
+    }
+
+    public FuegoController getFuegoController() {
+        return fuegoController;
+    }
+
+    public void setFuegoController(FuegoController fuegoController) {
+        this.fuegoController = fuegoController;
+    }
+
+    private FuegoController fuegoController;
     private boolean deadFire;
     public void setColorFr(Color colorFr) {
         this.colorFr = colorFr;
@@ -34,6 +54,7 @@ public class FuegoModel extends Canvas implements Runnable {
         if (colorBC!=null){
             this.setBackground(colorBC);
         }
+        //Default
         else {
             this.setBackground(Color.black);
         }
@@ -48,6 +69,7 @@ public class FuegoModel extends Canvas implements Runnable {
             if (colorFr != null){
                 color = new Color(colorFr.getRed(), colorFr.getGreen(), colorFr.getBlue(), alpha);
             }
+            //Default
             else {
                 color = new Color(255, 0, 0, alpha);
             }
@@ -59,11 +81,11 @@ public class FuegoModel extends Canvas implements Runnable {
         data = new int[getWidth()][getHeight()];
         data2 = new int[data[0].length][data[1].length];
 
-        // Inicialización de los puntos de llama en el
+        // Inicialización de los puntos de llama en el fondo de la pantalla
         for (int i = 0; i < data[0].length; i++) {
             try {
                 for (int j =data[1].length-4; j < data[1].length; j++) {
-                    int porciento = r.nextInt(100);
+                    int porciento = r.nextInt(101);
                     if (porciento < 50) {
                         if (!deadFire){
                             data[i][j] = 255;
@@ -74,7 +96,8 @@ public class FuegoModel extends Canvas implements Runnable {
                 }
             }
             catch (ArrayIndexOutOfBoundsException e){
-
+                //El fuego no se puede pintar porque el usuario tiene la pantalla reducida, resultado esperado
+                Logger.getLogger(FuegoModel.class.getName()).log(Level.FINE, null, e);
             }
 
         }

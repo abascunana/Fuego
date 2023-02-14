@@ -12,10 +12,22 @@ public class FuegoView extends JFrame implements ActionListener {
     private JButton bfire;
     private JColorChooser colorChooser;
     private FuegoModel fuegoModel;
+
+
+    public FuegoController getFuegoController() {
+        return fuegoController;
+    }
+
+    public void setFuegoController(FuegoController fuegoController) {
+        this.fuegoController = fuegoController;
+    }
+
     private FuegoController fuegoController;
 
     //Crear
-    public FuegoView(){
+    public FuegoView(FuegoModel fuegoModel)
+    {this.fuegoModel = fuegoModel;
+        setFuegoController(fuegoModel.getFuegoController());
         CrearMiventana();
     }
     public void CrearMiventana(){
@@ -24,12 +36,7 @@ public class FuegoView extends JFrame implements ActionListener {
         setLayout(new GridBagLayout());
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setPreferredSize(new Dimension(700,700));
-
         Componentes();
-
-        fuegoModel = new FuegoModel();
-
-        fuegoController = new FuegoController(fuegoModel);
         Thread thread = new Thread(fuegoModel);
         Thread threadc = new Thread(fuegoController);
         getContentPane().add(fuegoModel);
