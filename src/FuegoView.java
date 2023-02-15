@@ -9,7 +9,6 @@ import java.io.IOException;
 public class FuegoView extends JFrame implements ActionListener {
     private JButton bkill;
     private JButton bback;
-    private JButton bfire;
     private JColorChooser colorChooser;
     private FuegoModel fuegoModel;
 
@@ -33,13 +32,13 @@ public class FuegoView extends JFrame implements ActionListener {
     public void CrearMiventana(){
         setTitle("Java Fuego");
         setSize(700,700);
-        setLayout(new GridBagLayout());
+        setLayout(new BorderLayout());
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setPreferredSize(new Dimension(700,700));
         Componentes();
         Thread thread = new Thread(fuegoModel);
         Thread threadc = new Thread(fuegoController);
-        getContentPane().add(fuegoModel);
+        getContentPane().add(fuegoModel, BorderLayout.CENTER);
         this.setVisible(true);
         thread.start();
         threadc.start();
@@ -49,26 +48,33 @@ public class FuegoView extends JFrame implements ActionListener {
 
     }
     public void Componentes(){
-        GridBagConstraints c = new GridBagConstraints();
+        JPanel botones = new JPanel();
+        JPanel controlador = new JPanel();
+
+       controlador.setLayout(new GridBagLayout());
+      GridBagConstraints c = new GridBagConstraints();
         bkill = new JButton("KillFire");
         bkill.addActionListener(this);
-        c.gridx=0;
-        c.gridy=0;
-        this.add(bkill,c);
-        bback = new JButton("SetBack");
-        bback.addActionListener(this);
-        c.gridx=1;
-        c.gridy=0;
-        this.add(bback,c);
-        bfire = new JButton("SetFireColor");
-        bfire.addActionListener(this);
-        c.gridx=2;
-        c.gridy=0;
-        this.add(bfire,c);
-        colorChooser = new JColorChooser();
-        c.gridx=1;
+       /* c.gridx=0;
         c.gridy=1;
-        this.add(colorChooser,c);
+        botones.add(bkill,c);*/
+        botones.add(bkill);
+        bback = new JButton("SetBack");
+
+        bback.addActionListener(this);
+   /*     c.gridx=1;
+        c.gridy=1;
+        botones.add(bback,c);*/
+        botones.add(bback);
+
+        colorChooser = new JColorChooser();
+      c.gridx=0;
+        c.gridy=0;
+        controlador.add(colorChooser,c);
+
+        c.gridy =1;
+        controlador.add(botones,c);
+        this.getContentPane().add(controlador, BorderLayout.WEST);
 
     }
 
@@ -79,10 +85,7 @@ public class FuegoView extends JFrame implements ActionListener {
         fuegoController.setColorBC(colorChooser.getColor());
 
         }
-        if (e.getSource() == this.bfire) {
-            fuegoController.setColorFr(colorChooser.getColor());
 
-        }
         if (e.getSource() == this.bkill){
             fuegoController.setDeadFire();
         }
