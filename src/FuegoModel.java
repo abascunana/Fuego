@@ -14,7 +14,6 @@ public class FuegoModel extends Canvas implements Runnable {
     private Graphics2D canvasGraphics;
     private int[][] data2;
     private Color colorBC;
-    private Color colorFr;
     private FuegoView fuegoView;
 
     public FuegoView getFuegoView() {
@@ -35,9 +34,6 @@ public class FuegoModel extends Canvas implements Runnable {
 
     private FuegoController fuegoController;
     private boolean deadFire;
-    public void setColorFr(Color colorFr) {
-        this.colorFr = colorFr;
-    }
 
     public void setDeadFire(boolean deadFire) {
         this.deadFire = deadFire;
@@ -48,8 +44,24 @@ public class FuegoModel extends Canvas implements Runnable {
         this.colorBC = colorBC;
     }
 
+public  void crearColores(Color[] colors ,int primer,int ultimo){
+
+    //lo que tengo que hacer es calcular con las posiciones dadas los colores de enmedio
+    for (int i = primer; i < ultimo; i++) {
+        int sumarojo = (colors[ultimo].getRed());
+        int sumaverde = (colors[ultimo].getGreen());
+        int sumaazul = (colors[ultimo].getBlue());
+        // int sumarojo = (colors[ultimo].getRed()-colors[primer].getRed())/(ultimo-primer);
+        // int sumaverde = (colors[ultimo].getGreen()-colors[primer].getGreen())/(ultimo-primer);
+        // int sumaazul = (colors[ultimo].getBlue()-colors[primer].getBlue())/(ultimo-primer);
+            int alpha = i;
+            Color color = new Color( sumarojo, sumaverde, sumaazul, alpha);
+            colors[i] =color;
+        }
+}
+
     public void Pintar(Graphics g) {
-        setSize(new Dimension(400,400));
+        setSize(new Dimension(500,500));
         canvasGraphics = (Graphics2D) g;
         if (colorBC!=null){
             this.setBackground(colorBC);
@@ -58,41 +70,40 @@ public class FuegoModel extends Canvas implements Runnable {
         else {
             this.setBackground(Color.black);
         }
+        Color[] listaColores = new Color[255];
+        //TODO USAR 3 COLORES PARA CAMBIAR EL VALOR DEL FUEGO
+        //color no utilizado
+        listaColores[0] = new Color( 0, 0, 0, 0);
+        //Punto dispersión
+        listaColores[100] = new Color( 255, 0, 0, 100);
+        //Punto hot
+        listaColores[200] = new Color( 255, 255, 0, 255);
+        //Punto xtrahot
+        listaColores[254] = new Color(255,255,255,255);
+
+        crearColores(listaColores,0,100);
+        crearColores(listaColores,100,200);
+        crearColores(listaColores,200,254);
+
 
         Random r = new Random();
         //TODO varios colores 3 o 4 para cada temperatura esencial y luego
         // Paleta de colores
-        ArrayList<Color> colors = new ArrayList<>();
-        for (int i = 0; i < 256; i++) {
-            int alpha = i;
-            Color color = null;
-            if (i<100){
-                color = new Color( 255, 0, 0, alpha);
-            }
-            else if (100<i && i<150){
-                color = new Color( 255, 255, 0, alpha);
-            }
-            else if (100<i && i<250){
-                color = new Color( 255, 255, 155, alpha);
-            }
 
-
-
-            colors.add(color);
-        }
 
         // Creación de la matriz de temperatura
         data = new int[getWidth()][getHeight()];
-        data2 = new int[data[0].length][data[1].length];
+        data2 = new int[data.length][data[0].length];
 
         // Inicialización de los puntos de llama en el fondo de la pantalla
-        for (int i = 0; i < data[0].length; i++) {
+        for (int i = 0; i < data.length; i++) {
             try {
-                for (int j =data[1].length-4; j < data[1].length; j++) {
+                for (int j =data[0].length-4; j < data[0].length; j++) {
                     int porciento = r.nextInt(101);
+                    //VALOR MODIFICABLE EN UN SLIDER
                     if (porciento < 50) {
                         if (!deadFire){
-                            data[i][j] = 255;
+                            data[i][j] = 254;
                         }
 
                     }
@@ -105,14 +116,16 @@ public class FuegoModel extends Canvas implements Runnable {
             }
 
         }
-//i width j height
+
         // Propagación del fuego
-        for (int i = 1; i < data[0].length-1; i++) {
-            for (int j = data[1].length-2 ; j >= 0; j--) {
+        for (int i = 1; i < data.length-1; i++) {
+            for (int j = data[0].length-2 ; j >= 0; j--) {
                 int porciento = r.nextInt(101);
+                //VALOR MODIFICABLE EN UN SLIDER
                 if (porciento < 95) {
                     data2[i][j] = data[i][j];
-                    canvasGraphics.setColor(colors.get(data2[i][j]));
+
+                    canvasGraphics.setColor(listaColores[data[i][j]]);
                     data[i+1][j] = (data[i][j+1] + data[i-1][j] + data[i][j + 1] + data[i+1][j + 1]) / 4;
                     // Copia los datos a la matriz temporal antes de hacer los cálculos
                     canvasGraphics.drawRect(i, j, 1, 1);
