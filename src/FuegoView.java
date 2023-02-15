@@ -92,7 +92,7 @@ public class FuegoView extends JFrame implements ActionListener {
 
         }
 
-
+//cHANGE LISTENER PARA LOS SLIDERS
 
 
 }
