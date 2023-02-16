@@ -1,16 +1,26 @@
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
 
-public class FuegoView extends JFrame implements ActionListener {
+public class FuegoView extends JFrame implements ActionListener{
     private JButton bkill;
     private JButton bback;
+    private JButton f1;
+    private JButton f2;
+    private JButton f3;
+
+    //TODO FUEGO PORCENTAJE INICIO
+    //TODO FUEGO DISPERSIÓN
+    //TODO FUEGO COLORES (3 COLORES IMPLICADOS POR AHORA)
     private JColorChooser colorChooser;
     private FuegoModel fuegoModel;
+
 
 
     public FuegoController getFuegoController() {
@@ -31,7 +41,8 @@ public class FuegoView extends JFrame implements ActionListener {
     }
     public void CrearMiventana(){
         setTitle("Java Fuego");
-        setSize(700,700);
+
+        setSize(50000,50000);
         setLayout(new BorderLayout());
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setPreferredSize(new Dimension(700,700));
@@ -40,6 +51,8 @@ public class FuegoView extends JFrame implements ActionListener {
         Thread threadc = new Thread(fuegoController);
         getContentPane().add(fuegoModel, BorderLayout.CENTER);
         this.setVisible(true);
+        createBufferStrategy(2);
+
         thread.start();
         threadc.start();
 
@@ -62,11 +75,12 @@ public class FuegoView extends JFrame implements ActionListener {
         bback = new JButton("SetBack");
 
         bback.addActionListener(this);
-   /*     c.gridx=1;
-        c.gridy=1;
+   /*
         botones.add(bback,c);*/
         botones.add(bback);
-
+        f1 = new JButton("Fuego");
+        f1.addActionListener(this);
+        botones.add(f1);
         colorChooser = new JColorChooser();
       c.gridx=0;
         c.gridy=0;
@@ -89,10 +103,14 @@ public class FuegoView extends JFrame implements ActionListener {
         if (e.getSource() == this.bkill){
             fuegoController.setDeadFire();
         }
+        if (e.getSource() == this.f1) {
+            fuegoController.setColorFr(colorChooser.getColor());
 
         }
+        }
 
-//cHANGE LISTENER PARA LOS SLIDERS
+
+
 
 
 }

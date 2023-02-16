@@ -36,9 +36,8 @@ public class FuegoController implements Runnable{
     @Override
     public void run() {
         while (true){
-            if (colorBC!=null){
-                getModel().setColorBC(colorBC);
-            }
+            getModel().setColorFr(colorFr);
+            getModel().setColorBC(colorBC);
             getModel().setDeadFire(deadFire);
         }
 

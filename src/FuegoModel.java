@@ -2,6 +2,7 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferStrategy;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -14,9 +15,26 @@ public class FuegoModel extends Canvas implements Runnable {
     private Graphics2D canvasGraphics;
     private int[][] data2;
     private Color colorBC;
+
+
+
+    private Color colorFr;
     private FuegoView fuegoView;
     private FuegoController fuegoController;
     private boolean deadFire;
+    //TODO CAMBIAR NOMBRE
+    private BufferedImage imagetemp ;
+    private BufferedImage imageshow1 ;
+    private int[] ImgArray;
+    public void setColorFr(Color colorFr) {
+        this.colorFr = colorFr;
+    }
+    public int[] getImgArray() {
+        if (ImgArray == null) {
+            ImgArray = new int[getWidth()*getHeight()];
+        }
+        return ImgArray;
+    }
 
     public FuegoView getFuegoView() {
         return fuegoView;
@@ -45,12 +63,21 @@ public class FuegoModel extends Canvas implements Runnable {
     }
 
     public void crearColores(Color[] colors, int primer, int ultimo) {
-
+        int sumarojo = (colors[primer].getRed());
+        int sumaverde = (colors[primer].getGreen());
+        int sumaazul = (colors[primer].getBlue());
         //lo que tengo que hacer es calcular con las posiciones dadas los colores de enmedio
         for (int i = primer; i < ultimo; i++) {
-            int sumarojo = (colors[ultimo].getRed());
-            int sumaverde = (colors[ultimo].getGreen());
-            int sumaazul = (colors[ultimo].getBlue());
+
+            for (int j = colors[primer].getRed(); j < colors[ultimo].getRed(); j++) {
+                sumarojo++;
+            }
+            for (int j = colors[primer].getGreen(); j < colors[ultimo].getGreen(); j++) {
+                sumaverde++;
+            }
+            for (int j = colors[primer].getBlue(); j < colors[ultimo].getBlue(); j++) {
+                sumaazul++;
+            }
             // int sumarojo = (colors[ultimo].getRed()-colors[primer].getRed())/(ultimo-primer);
             // int sumaverde = (colors[ultimo].getGreen()-colors[primer].getGreen())/(ultimo-primer);
             // int sumaazul = (colors[ultimo].getBlue()-colors[primer].getBlue())/(ultimo-primer);
@@ -61,8 +88,11 @@ public class FuegoModel extends Canvas implements Runnable {
     }
 
     public void Pintar(Graphics g) {
+
         setSize(new Dimension(500, 500));
         canvasGraphics = (Graphics2D) g;
+
+        int[] buffer = getImgArray();
         if (colorBC != null) {
             this.setBackground(colorBC);
         }
@@ -71,14 +101,20 @@ public class FuegoModel extends Canvas implements Runnable {
             this.setBackground(Color.black);
         }
         Color[] listaColores = new Color[255];
-        //TODO USAR 3 COLORES PARA CAMBIAR EL VALOR DEL FUEGO
+
+        //TODO MEJORAR MODELO
         //color no utilizado
         listaColores[0] = new Color(0, 0, 0, 0);
         //Punto dispersión
-        listaColores[100] = new Color(255, 0, 0, 100);
-        //Punto hot
+        if (colorFr != null){
+            listaColores[100] = new Color(colorFr.getRed(), colorFr.getGreen(), colorFr.getBlue(), 255);
+        }
+        else {
+            listaColores[100] = new Color(255, 0, 0, 255);
+        }
+
+        //Valores para añadir sensación del fuego sin importar su color, no modificables
         listaColores[200] = new Color(255, 255, 0, 255);
-        //Punto xtrahot
         listaColores[254] = new Color(255, 255, 255, 255);
 
         crearColores(listaColores, 0, 100);
@@ -87,9 +123,11 @@ public class FuegoModel extends Canvas implements Runnable {
 
 
         Random r = new Random();
-        //TODO varios colores 3 o 4 para cada temperatura esencial y luego
-        // Paleta de colores
-
+        try {
+            Thread.sleep(20);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
 
         // Creación de la matriz de temperatura
         data = new int[getWidth()][getHeight()];
@@ -101,7 +139,7 @@ public class FuegoModel extends Canvas implements Runnable {
                 for (int j = data[0].length - 4; j < data[0].length; j++) {
                     int porciento = r.nextInt(101);
                     //VALOR MODIFICABLE EN UN SLIDER
-                    if (porciento < 50) {
+                    if (porciento < 80) {
                         if (!deadFire) {
                             data[i][j] = 254;
                         }
@@ -123,22 +161,20 @@ public class FuegoModel extends Canvas implements Runnable {
                 //VALOR MODIFICABLE EN UN SLIDER
                 if (porciento < 95) {
                     data2[i][j] = data[i][j];
-
-                    canvasGraphics.setColor(listaColores[data[i][j]]);
-                    data[i + 1][j] = (data[i][j + 1] + data[i - 1][j] + data[i][j + 1] + data[i + 1][j + 1]) / 4;
-                    // Copia los datos a la matriz temporal antes de hacer los cálculos
-                    canvasGraphics.drawRect(i, j, 1, 1);
-
+                    data[i + 1][j] = (data[i][j + 1] + data[i - 1][j] + data[i][j + 1] + data[i + 1][j+1]) / 4;
+                    imagetemp.setRGB(i, j, listaColores[data[i][j]].getRGB());
+                    imageshow1 = imagetemp;
 
                 }
             }
-        }
 
+
+
+        }
+        canvasGraphics.drawImage(imageshow1,0,0,null);
+        data2 = data;
         // Copia los datos de la matriz temporal de vuelta a la matriz de temperatura
 
-        data2 = data;
-        paint(this.getGraphics());
-        repaint();
     }
 
 
@@ -148,8 +184,12 @@ public class FuegoModel extends Canvas implements Runnable {
 
     @Override
     public void run() {
+        imagetemp = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_4BYTE_ABGR);
+        imageshow1 = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_4BYTE_ABGR);
         while (true) {
             Pintar(getGraphics());
+
+            repaint();
         }
     }
 }
