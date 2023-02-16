@@ -8,13 +8,11 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
 
-public class FuegoView extends JFrame implements ActionListener{
+public class FuegoView extends JFrame implements ActionListener,ChangeListener{
     private JButton bkill;
     private JButton bback;
     private JButton f1;
-    private JButton f2;
-    private JButton f3;
-
+    private JSlider expansion;
     //TODO FUEGO PORCENTAJE INICIO
     //TODO FUEGO DISPERSIÓN
     //TODO FUEGO COLORES (3 COLORES IMPLICADOS POR AHORA)
@@ -85,9 +83,17 @@ public class FuegoView extends JFrame implements ActionListener{
       c.gridx=0;
         c.gridy=0;
         controlador.add(colorChooser,c);
-
         c.gridy =1;
         controlador.add(botones,c);
+        c.gridy=2;
+        expansion = new JSlider(0, 100, 95);
+        expansion.setPaintTrack(true);
+        expansion.setPaintTicks(true);
+        expansion.setPaintLabels(true);
+        expansion.setMajorTickSpacing(100);
+        expansion.setMinorTickSpacing(1);
+        expansion.addChangeListener(this);
+        controlador.add(expansion,c);
         this.getContentPane().add(controlador, BorderLayout.WEST);
 
     }
@@ -110,7 +116,10 @@ public class FuegoView extends JFrame implements ActionListener{
         }
 
 
-
-
-
+    @Override
+    public void stateChanged(ChangeEvent e) {
+        if (e.getSource() == this.expansion){
+            fuegoController.setExpansion(expansion.getValue());
+        }
+    }
 }

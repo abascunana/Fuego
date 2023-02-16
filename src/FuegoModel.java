@@ -18,6 +18,7 @@ public class FuegoModel extends Canvas implements Runnable {
 
 
 
+    private int expansion;
     private Color colorFr;
     private FuegoView fuegoView;
     private FuegoController fuegoController;
@@ -57,6 +58,9 @@ public class FuegoModel extends Canvas implements Runnable {
         this.deadFire = deadFire;
     }
 
+    public void setExpansion(int expansion) {
+        this.expansion = expansion;
+    }
 
     public void setColorBC(Color colorBC) {
         this.colorBC = colorBC;
@@ -124,7 +128,7 @@ public class FuegoModel extends Canvas implements Runnable {
 
         Random r = new Random();
         try {
-            Thread.sleep(20);
+            Thread.sleep(10);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
@@ -159,7 +163,8 @@ public class FuegoModel extends Canvas implements Runnable {
             for (int j = data[0].length - 2; j >= 0; j--) {
                 int porciento = r.nextInt(101);
                 //VALOR MODIFICABLE EN UN SLIDER
-                if (porciento < 95) {
+
+                if (porciento < expansion) {
                     data2[i][j] = data[i][j];
                     data[i + 1][j] = (data[i][j + 1] + data[i - 1][j] + data[i][j + 1] + data[i + 1][j+1]) / 4;
                     imagetemp.setRGB(i, j, listaColores[data[i][j]].getRGB());

@@ -2,6 +2,12 @@ import java.awt.*;
 
 public class FuegoController implements Runnable{
     private Color colorBC;
+
+    public void setExpansion(int expansion) {
+        this.expansion = expansion;
+    }
+
+    private int expansion;
     private Color colorFr; //3 colores
     private FuegoModel model;
     private boolean deadFire = false;
@@ -39,6 +45,7 @@ public class FuegoController implements Runnable{
             getModel().setColorFr(colorFr);
             getModel().setColorBC(colorBC);
             getModel().setDeadFire(deadFire);
+            getModel().setExpansion(expansion);
         }
 
     }
