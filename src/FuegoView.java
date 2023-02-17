@@ -7,7 +7,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
-
 public class FuegoView extends JFrame implements ActionListener,ChangeListener{
     private JButton bkill;
     private JButton bback;
@@ -16,20 +15,13 @@ public class FuegoView extends JFrame implements ActionListener,ChangeListener{
     private JSlider inicio;
     private JColorChooser colorChooser;
     private FuegoModel fuegoModel;
-
-
-
     public FuegoController getFuegoController() {
         return fuegoController;
     }
-
     public void setFuegoController(FuegoController fuegoController) {
         this.fuegoController = fuegoController;
     }
-
     private FuegoController fuegoController;
-
-    //Crear
     public FuegoView(FuegoModel fuegoModel)
     {this.fuegoModel = fuegoModel;
         setFuegoController(fuegoModel.getFuegoController());
@@ -102,23 +94,17 @@ public class FuegoView extends JFrame implements ActionListener,ChangeListener{
         inicio.addChangeListener(this);
         controlador.add(inicio,c);
         this.getContentPane().add(controlador, BorderLayout.WEST);
-
     }
-
-
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == this.bback) {
         fuegoController.setColorBC(colorChooser.getColor());
-
         }
-
         if (e.getSource() == this.bkill){
             fuegoController.setDeadFire();
         }
         if (e.getSource() == this.f1) {
             fuegoController.setColorFr(colorChooser.getColor());
-
         }
         }
 

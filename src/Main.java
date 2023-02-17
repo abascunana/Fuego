@@ -4,8 +4,5 @@ public class Main {
         FuegoController fuegoController = new FuegoController(fuegoModel);
         fuegoModel.setFuegoController(fuegoController);
         FuegoView fuegoView = new FuegoView(fuegoModel);
-
-
-
     }
 }
