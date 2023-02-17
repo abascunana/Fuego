@@ -3,11 +3,11 @@ import java.awt.*;
 public class FuegoController implements Runnable{
     private Color colorBC;
 
-    public void setExpansion(int expansion) {
-        this.expansion = expansion;
+    public void setPixelarriba(double pixelarriba) {
+        this.pixelarriba = pixelarriba;
     }
 
-    private int expansion;
+    private double pixelarriba;
 
     public void setInicio(int inicio) {
         this.inicio = inicio;
@@ -51,7 +51,7 @@ public class FuegoController implements Runnable{
             getModel().setColorFr(colorFr);
             getModel().setColorBC(colorBC);
             getModel().setDeadFire(deadFire);
-            getModel().setExpansion(expansion);
+            getModel().setPixelarriba(pixelarriba);
             getModel().setInicio(inicio);
         }
 

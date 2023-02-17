@@ -12,7 +12,7 @@ public class FuegoView extends JFrame implements ActionListener,ChangeListener{
     private JButton bkill;
     private JButton bback;
     private JButton f1;
-    private JSlider expansion;
+    private JSlider pixelarriba,pixelabajo,pixelderecha,pixelizquierda;
     private JSlider inicio;
     private JColorChooser colorChooser;
     private FuegoModel fuegoModel;
@@ -73,16 +73,16 @@ public class FuegoView extends JFrame implements ActionListener,ChangeListener{
         c.gridy =1;
         controlador.add(botones,c);
         c.gridy=2;
-        expansion = new JSlider(0, 100, 95);
-        expansion.setPaintTrack(true);
-        expansion.setPaintTicks(true);
-        expansion.setPaintLabels(true);
-        expansion.setMajorTickSpacing(100);
-        expansion.setMinorTickSpacing(1);
-        expansion.addChangeListener(this);
-        controlador.add(expansion,c);
+        pixelarriba = new JSlider(0, 20,10);
+        pixelarriba.setPaintTrack(true);
+        pixelarriba.setPaintTicks(true);
+        pixelarriba.setPaintLabels(true);
+        pixelarriba.setMajorTickSpacing(100);
+        pixelarriba.setMinorTickSpacing(1);
+        pixelarriba.addChangeListener(this);
+        controlador.add(pixelarriba,c);
         c.gridy=3;
-        inicio = new JSlider(0, 100, 80);
+        inicio = new JSlider(0, 10, 3);
         inicio.setPaintTrack(true);
         inicio.setPaintTicks(true);
         inicio.setPaintLabels(true);
@@ -108,11 +108,14 @@ public class FuegoView extends JFrame implements ActionListener,ChangeListener{
 
     @Override
     public void stateChanged(ChangeEvent e) {
-        if (e.getSource() == this.expansion){
-            fuegoController.setExpansion(expansion.getValue());
+        if (e.getSource() == this.pixelarriba){
+            fuegoController.setPixelarriba((double) pixelarriba.getValue()/100);
+            fuegoController.getModel().LimpiarMatriz();
         }
         if (e.getSource() == this.inicio){
             fuegoController.setInicio(inicio.getValue());
+            fuegoController.getModel().LimpiarMatriz();
+
         }
     }
 }

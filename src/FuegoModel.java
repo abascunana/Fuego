@@ -15,7 +15,8 @@ public class FuegoModel extends Canvas implements Runnable {
     private Graphics2D canvasGraphics;
     private Color colorBC;
     private int inicio;
-    private int expansion;
+
+    private double pixelarriba;
     private Color colorFr;
     private FuegoView fuegoView;
     private FuegoController fuegoController;
@@ -52,8 +53,9 @@ public class FuegoModel extends Canvas implements Runnable {
         this.deadFire = deadFire;
     }
 
-    public void setExpansion(int expansion) {
-        this.expansion = expansion;
+
+    public void setPixelarriba(double pixelarriba) {
+        this.pixelarriba = pixelarriba;
     }
 
     public void setColorBC(Color colorBC) {
@@ -70,7 +72,6 @@ public class FuegoModel extends Canvas implements Runnable {
         int sumaazul = (colors[primer].getBlue());
         for (int i = primer; i < ultimo; i++) {
             int alpha = i;
-
             for (int j = colors[primer].getRed(); j < colors[ultimo].getRed(); j++) {
                 sumarojo++;
             }
@@ -92,27 +93,28 @@ public class FuegoModel extends Canvas implements Runnable {
     public void llamarPaleta() {
         listaColores = new Color[256];
         listaColores[0] = new Color(0, 0, 0, 0);
-
         if (colorFr != null) {
             listaColores[100] = new Color(colorFr.getRed(), colorFr.getGreen(), colorFr.getBlue(), 255);
         } else {
             listaColores[100] = new Color(255, 0, 0, 255);
         }
-
         listaColores[150] = new Color(253, 152, 0, 255);
         //Valores para añadir sensación del fuego sin importar su color, no modificables
         listaColores[200] = new Color(255, 255, 0, 255);
         listaColores[255] = new Color(255, 255, 255, 255);
-
         crearColores(listaColores, 0, 100);
         crearColores(listaColores, 100, 150);
         crearColores(listaColores, 150, 200);
         crearColores(listaColores, 200, 255);
-
     }
-
+    public void LimpiarMatriz(){
+        for (int fila = 0; fila < data.length - 1; fila++) {
+            for (int columna = 0; columna < data[fila].length; columna++) {
+                data[columna][fila] = 0;
+            }
+        }
+    }
     public void Pintar(Graphics g) {
-
         canvasGraphics = (Graphics2D) g;
         if (colorBC != null) {
             this.setBackground(colorBC);
@@ -121,18 +123,11 @@ public class FuegoModel extends Canvas implements Runnable {
         else {
             this.setBackground(Color.black);
         }
-
-
         llamarPaleta();
         Random r = new Random();
-
         // Temperature matrix
         //controlar tamaño con variable
-
-
-
         // Fire points initialization
-
         for (int columna = 0; columna < data[0].length; columna++) {
             int porciento = r.nextInt(101);
             //Slider modifiable value
@@ -140,16 +135,17 @@ public class FuegoModel extends Canvas implements Runnable {
                 if (!deadFire) {
                     data[data.length - 1][columna] = 255;
                 }
+                else {
+                    LimpiarMatriz();
+                }
             }
         }
-
-
         //i = file j = columna )
         // Fire propagation
         for (int fila = 0; fila < data.length - 1; fila++) {
             for (int columna = 0; columna < data[fila].length; columna++) {
                 //VALOR MODIFICABLE EN UN SLIDER
-                double temperatura = data[fila][columna] * 0.2;
+                double temperatura = data[fila][columna] * pixelarriba;
                 temperatura += data[fila + 1][columna] * 0.5;
                 if (columna < data[fila + 1].length - 1) {
                     temperatura += data[fila + 1][columna + 1] * 0.15;
@@ -158,11 +154,8 @@ public class FuegoModel extends Canvas implements Runnable {
                     temperatura += data[fila + 1][columna - 1] * 0.15;
                 }
                 data[fila][columna] = temperatura;
-                System.out.print(" "+temperatura);
-
             }
-            System.out.println(" ");
-
+           // System.out.println(" ");
         }
         //Pintar píxeles
         for (int fila = 0; fila < data.length; fila++) {
@@ -171,18 +164,17 @@ public class FuegoModel extends Canvas implements Runnable {
             }
         }
         //Double buffer attempt
-
         canvasGraphics.drawImage(imagetemp, 0, 0, null);
+
     }
 
     @Override
     public void run() {
         //Double buffer attempt
-
         imagetemp = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_4BYTE_ABGR);
         while (true) {
             Pintar(getGraphics());
-
+            repaint();
         }
     }
 }
