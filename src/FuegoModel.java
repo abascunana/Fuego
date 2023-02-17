@@ -11,9 +11,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class FuegoModel extends Canvas implements Runnable {
-    private int[][] data;
+    private double[][] data;
     private Graphics2D canvasGraphics;
-    private int[][] data2;
     private Color colorBC;
     private int inicio;
     private int expansion;
@@ -21,10 +20,10 @@ public class FuegoModel extends Canvas implements Runnable {
     private FuegoView fuegoView;
     private FuegoController fuegoController;
     private boolean deadFire;
-    private BufferedImage imagetemp ;
-    private BufferedImage imageshow1 ;
+    private BufferedImage imagetemp;
     private int[] ImgArray;
     private Color[] listaColores;
+
     public void setColorFr(Color colorFr) {
         this.colorFr = colorFr;
     }
@@ -48,22 +47,27 @@ public class FuegoModel extends Canvas implements Runnable {
     public void setFuegoController(FuegoController fuegoController) {
         this.fuegoController = fuegoController;
     }
+
     public void setDeadFire(boolean deadFire) {
         this.deadFire = deadFire;
     }
+
     public void setExpansion(int expansion) {
         this.expansion = expansion;
     }
+
     public void setColorBC(Color colorBC) {
         this.colorBC = colorBC;
     }
 
+    public FuegoModel() {
+        data = new double[400][400];
+    }
 
     public void crearColores(Color[] colors, int primer, int ultimo) {
         int sumarojo = (colors[primer].getRed());
         int sumaverde = (colors[primer].getGreen());
         int sumaazul = (colors[primer].getBlue());
-        //lo que tengo que hacer es calcular con las posiciones dadas los colores de enmedio
         for (int i = primer; i < ultimo; i++) {
             int alpha = i;
 
@@ -84,31 +88,31 @@ public class FuegoModel extends Canvas implements Runnable {
             colors[i] = color;
         }
     }
-public void llamarPaleta(){
-     listaColores = new Color[255];
-     listaColores[0] = new Color(0, 0, 0, 0);
 
+    public void llamarPaleta() {
+        listaColores = new Color[256];
+        listaColores[0] = new Color(0, 0, 0, 0);
 
-    if (colorFr != null){
-        listaColores[100] = new Color(colorFr.getRed(), colorFr.getGreen(), colorFr.getBlue(), 255);
+        if (colorFr != null) {
+            listaColores[100] = new Color(colorFr.getRed(), colorFr.getGreen(), colorFr.getBlue(), 255);
+        } else {
+            listaColores[100] = new Color(255, 0, 0, 255);
+        }
+
+        listaColores[150] = new Color(253, 152, 0, 255);
+        //Valores para añadir sensación del fuego sin importar su color, no modificables
+        listaColores[200] = new Color(255, 255, 0, 255);
+        listaColores[255] = new Color(255, 255, 255, 255);
+
+        crearColores(listaColores, 0, 100);
+        crearColores(listaColores, 100, 150);
+        crearColores(listaColores, 150, 200);
+        crearColores(listaColores, 200, 255);
+
     }
-    else {
-        listaColores[100] = new Color(255, 0, 0, 255);
-    }
 
-    listaColores[150] = new Color(253, 152, 0, 255);
-    //Valores para añadir sensación del fuego sin importar su color, no modificables
-    listaColores[200] = new Color(255, 255, 0, 255);
-    listaColores[254] = new Color(255, 255, 255, 255);
-
-    crearColores(listaColores, 0, 100);
-    crearColores(listaColores, 100, 150);
-    crearColores(listaColores, 150, 200);
-    crearColores(listaColores, 200, 254);
-
-}
     public void Pintar(Graphics g) {
-        setSize(new Dimension(500, 500));
+
         canvasGraphics = (Graphics2D) g;
         if (colorBC != null) {
             this.setBackground(colorBC);
@@ -118,58 +122,67 @@ public void llamarPaleta(){
             this.setBackground(Color.black);
         }
 
-        //TODO MEJORAR MODELO
+
         llamarPaleta();
         Random r = new Random();
 
-        // Creación de la matriz de temperatura
-        data = new int[getWidth()][getHeight()];
-        data2 = new int[data.length][data[0].length];
+        // Temperature matrix
+        //controlar tamaño con variable
 
-        // Inicialización de los puntos de llama en el fondo de la pantalla
-        for (int i = 0; i < data.length; i++) {
-            try {
-                for (int j = data[0].length - 2; j < data[0].length; j++) {
-                    int porciento = r.nextInt(101);
-                    //VALOR MODIFICABLE EN UN SLIDER
-                    if (porciento < inicio) {
-                        if (!deadFire) {
-                            data[i][j] = 254;
-                        }
-                    }
+
+
+        // Fire points initialization
+
+        for (int columna = 0; columna < data[0].length; columna++) {
+            int porciento = r.nextInt(101);
+            //Slider modifiable value
+            if (porciento <= inicio) {
+                if (!deadFire) {
+                    data[data.length - 1][columna] = 255;
                 }
-            } catch (ArrayIndexOutOfBoundsException e) {
-                //El fuego no se puede pintar porque el usuario tiene la pantalla reducida, resultado esperado
-                Logger.getLogger(FuegoModel.class.getName()).log(Level.FINE, null, e);
             }
-
         }
-        //i = width j = height )
-        // Propagación del fuego
-        for (int i = 1; i < data.length - 2/*márgen*/; i++) {
-            for (int j = data[0].length - 2/*márgen*/; j > 0; j--) {
-                int porciento = r.nextInt(101);
+
+
+        //i = file j = columna )
+        // Fire propagation
+        for (int fila = 0; fila < data.length - 1; fila++) {
+            for (int columna = 0; columna < data[fila].length; columna++) {
                 //VALOR MODIFICABLE EN UN SLIDER
-                if (porciento < expansion) {
-                    imageshow1 = imagetemp;
-                    data2[i][j] = data[i][j];
-                    //data[i][j+1]=(data[i][j+1]+data[i+1][j]+data[i-1][j]+data[i][j])/4;
-                    data[i+1][j]=(data[i][j+1]+data[i-1][j]+data[i][j+1]+data[i+1][j+1])/4;
-                    imagetemp.setRGB(i, j, listaColores[data[i][j]].getRGB());
+                double temperatura = data[fila][columna] * 0.2;
+                temperatura += data[fila + 1][columna] * 0.5;
+                if (columna < data[fila + 1].length - 1) {
+                    temperatura += data[fila + 1][columna + 1] * 0.15;
                 }
+                if (columna > 0) {
+                    temperatura += data[fila + 1][columna - 1] * 0.15;
+                }
+                data[fila][columna] = temperatura;
+                System.out.print(" "+temperatura);
+
+            }
+            System.out.println(" ");
+
+        }
+        //Pintar píxeles
+        for (int fila = 0; fila < data.length; fila++) {
+            for (int columna = 0; columna < data[fila].length; columna++) {
+                imagetemp.setRGB(columna, fila, listaColores[(int) data[fila][columna]].getRGB());
             }
         }
-        canvasGraphics.drawImage(imageshow1,0,0,null);
-        data2 = data;
-        // Copia los datos de la matriz temporal de vuelta a la matriz de temperatura
+        //Double buffer attempt
+
+        canvasGraphics.drawImage(imagetemp, 0, 0, null);
     }
+
     @Override
     public void run() {
+        //Double buffer attempt
+
         imagetemp = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_4BYTE_ABGR);
-        imageshow1 = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_4BYTE_ABGR);
         while (true) {
             Pintar(getGraphics());
-            repaint(100);
+
         }
     }
 }

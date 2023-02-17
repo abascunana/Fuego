@@ -5,6 +5,7 @@ import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferStrategy;
 import java.io.File;
 import java.io.IOException;
 public class FuegoView extends JFrame implements ActionListener,ChangeListener{
@@ -40,12 +41,8 @@ public class FuegoView extends JFrame implements ActionListener,ChangeListener{
         getContentPane().add(fuegoModel, BorderLayout.CENTER);
         this.setVisible(true);
         createBufferStrategy(2);
-
         thread.start();
         threadc.start();
-
-
-
 
     }
     public void Componentes(){
