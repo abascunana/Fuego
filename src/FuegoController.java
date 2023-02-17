@@ -8,6 +8,12 @@ public class FuegoController implements Runnable{
     }
 
     private int expansion;
+
+    public void setInicio(int inicio) {
+        this.inicio = inicio;
+    }
+
+    private int inicio;
     private Color colorFr; //3 colores
     private FuegoModel model;
     private boolean deadFire = false;
@@ -46,6 +52,7 @@ public class FuegoController implements Runnable{
             getModel().setColorBC(colorBC);
             getModel().setDeadFire(deadFire);
             getModel().setExpansion(expansion);
+            getModel().setInicio(inicio);
         }
 
     }
