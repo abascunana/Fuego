@@ -15,8 +15,9 @@ public class FuegoModel extends Canvas implements Runnable {
     private Graphics2D canvasGraphics;
     private Color colorBC;
     private int inicio;
-
     private double pixelarriba;
+    int size;
+    int frames;
     private Color colorFr;
     private FuegoView fuegoView;
     private FuegoController fuegoController;
@@ -24,7 +25,6 @@ public class FuegoModel extends Canvas implements Runnable {
     private BufferedImage imagetemp;
     private int[] ImgArray;
     private Color[] listaColores;
-
     public void setColorFr(Color colorFr) {
         this.colorFr = colorFr;
     }
@@ -63,7 +63,8 @@ public class FuegoModel extends Canvas implements Runnable {
     }
 
     public FuegoModel() {
-        data = new double[400][400];
+        size = 400;
+        data = new double[size][size];
     }
 
     public void crearColores(Color[] colors, int primer, int ultimo) {
@@ -81,9 +82,7 @@ public class FuegoModel extends Canvas implements Runnable {
             for (int j = colors[primer].getBlue(); j < colors[ultimo].getBlue(); j++) {
                 sumaazul++;
             }
-            // int sumarojo = (colors[ultimo].getRed()-colors[primer].getRed())/(ultimo-primer);
-            // int sumaverde = (colors[ultimo].getGreen()-colors[primer].getGreen())/(ultimo-primer);
-            // int sumaazul = (colors[ultimo].getBlue()-colors[primer].getBlue())/(ultimo-primer);
+
 
             Color color = new Color(sumarojo, sumaverde, sumaazul, alpha);
             colors[i] = color;
@@ -116,13 +115,21 @@ public class FuegoModel extends Canvas implements Runnable {
     }
     public void Pintar(Graphics g) {
         canvasGraphics = (Graphics2D) g;
+
         if (colorBC != null) {
             this.setBackground(colorBC);
         }
         //Default
+        /*
         else {
-            this.setBackground(Color.black);
-        }
+            try {
+                //Hacer un nuevo canvasGraphics
+                BufferedImage   background = ImageIO.read(new File("src/images/bg.jpg"));
+                canvasGraphics.drawImage(background, 0, 0, null);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }*/
         llamarPaleta();
         Random r = new Random();
         // Temperature matrix
@@ -155,6 +162,7 @@ public class FuegoModel extends Canvas implements Runnable {
                 }
                 data[fila][columna] = temperatura;
             }
+
            // System.out.println(" ");
         }
         //Pintar píxeles
@@ -164,17 +172,27 @@ public class FuegoModel extends Canvas implements Runnable {
             }
         }
         //Double buffer attempt
-        canvasGraphics.drawImage(imagetemp, 0, 0, null);
+        canvasGraphics.drawImage(imagetemp, 250, 100, null);
+
+
 
     }
 
     @Override
     public void run() {
         //Double buffer attempt
+
         imagetemp = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_4BYTE_ABGR);
         while (true) {
+
             Pintar(getGraphics());
             repaint();
+            frames++;
+            if (frames >= 50){
+                data = new double[size][size];
+                frames =0;
+            }
+
         }
     }
 }

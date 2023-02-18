@@ -6,6 +6,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferStrategy;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 public class FuegoView extends JFrame implements ActionListener,ChangeListener{
@@ -30,6 +31,13 @@ public class FuegoView extends JFrame implements ActionListener,ChangeListener{
     }
     public void CrearMiventana(){
         setTitle("Java Fuego");
+        String imagePath = "src/images/bg.jpg";
+        try {
+            BufferedImage myPicture = ImageIO.read(new File(imagePath));
+            setIconImage(myPicture);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
 
         setSize(50000,50000);
         setLayout(new BorderLayout());
