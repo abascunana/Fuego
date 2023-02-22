@@ -63,7 +63,7 @@ public class FuegoModel extends Canvas implements Runnable {
     }
 
     public FuegoModel() {
-        size = 400;
+        size = 600;
         data = new double[size][size];
     }
 
@@ -107,7 +107,7 @@ public class FuegoModel extends Canvas implements Runnable {
         crearColores(listaColores, 200, 255);
     }
     public void LimpiarMatriz(){
-        for (int fila = 0; fila < data.length - 1; fila++) {
+        for (int fila = 0; fila < data.length; fila++) {
             for (int columna = 0; columna < data[fila].length; columna++) {
                 data[columna][fila] = 0;
             }
@@ -152,12 +152,16 @@ public class FuegoModel extends Canvas implements Runnable {
         for (int fila = 0; fila < data.length - 1; fila++) {
             for (int columna = 0; columna < data[fila].length; columna++) {
                 //VALOR MODIFICABLE EN UN SLIDER
+
                 double temperatura = data[fila][columna] * pixelarriba;
+                //abajo
                 temperatura += data[fila + 1][columna] * 0.5;
                 if (columna < data[fila + 1].length - 1) {
+                    //izquierda
                     temperatura += data[fila + 1][columna + 1] * 0.15;
                 }
                 if (columna > 0) {
+                    //derecha
                     temperatura += data[fila + 1][columna - 1] * 0.15;
                 }
                 data[fila][columna] = temperatura;
@@ -165,14 +169,21 @@ public class FuegoModel extends Canvas implements Runnable {
 
            // System.out.println(" ");
         }
+        try {
+            Thread.sleep(10);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
         //Pintar píxeles
         for (int fila = 0; fila < data.length; fila++) {
             for (int columna = 0; columna < data[fila].length; columna++) {
+
                 imagetemp.setRGB(columna, fila, listaColores[(int) data[fila][columna]].getRGB());
+
             }
         }
         //Double buffer attempt
-        canvasGraphics.drawImage(imagetemp, 250, 100, null);
+        canvasGraphics.drawImage(imagetemp, 200, 0, null);
 
 
 
@@ -187,11 +198,7 @@ public class FuegoModel extends Canvas implements Runnable {
 
             Pintar(getGraphics());
             repaint();
-            frames++;
-            if (frames >= 50){
-                data = new double[size][size];
-                frames =0;
-            }
+
 
         }
     }

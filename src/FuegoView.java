@@ -31,7 +31,7 @@ public class FuegoView extends JFrame implements ActionListener,ChangeListener{
     }
     public void CrearMiventana(){
         setTitle("Java Fuego");
-        String imagePath = "src/images/bg.jpg";
+        String imagePath = "src/images/icon.png";
         try {
             BufferedImage myPicture = ImageIO.read(new File(imagePath));
             setIconImage(myPicture);
