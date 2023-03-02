@@ -198,6 +198,11 @@ public class FuegoModel extends Canvas implements Runnable {
 
             Pintar(getGraphics());
             repaint();
+            frames++;
+            if (frames == 100){
+                data = new double[size][size];
+                frames=0;
+            }
 
 
         }
