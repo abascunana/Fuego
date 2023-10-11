@@ -155,16 +155,29 @@ public class FuegoModel extends Canvas implements Runnable {
 
                 double temperatura = data[fila][columna] * pixelarriba;
                 //abajo
-                temperatura += data[fila + 1][columna] * 0.5;
+
+                if (fila >= 0){
+                    temperatura += data[fila + 1][columna] * 0.5;
+                    data[fila+1][columna] = temperatura;
+                }  else {
+                    data[fila][columna] = temperatura;
+                }
                 if (columna < data[fila + 1].length - 1) {
                     //izquierda
                     temperatura += data[fila + 1][columna + 1] * 0.15;
+                    data[fila+1][columna+1] = temperatura;
+                }  else {
+                    data[fila][columna] = temperatura;
                 }
                 if (columna > 0) {
                     //derecha
                     temperatura += data[fila + 1][columna - 1] * 0.15;
+                    data[fila+1][columna-1] = temperatura;
                 }
-                data[fila][columna] = temperatura;
+                else {
+                    data[fila][columna] = temperatura;
+                }
+
             }
 
            // System.out.println(" ");
@@ -198,11 +211,6 @@ public class FuegoModel extends Canvas implements Runnable {
 
             Pintar(getGraphics());
             repaint();
-            frames++;
-            if (frames == 100){
-                data = new double[size][size];
-                frames=0;
-            }
 
 
         }
