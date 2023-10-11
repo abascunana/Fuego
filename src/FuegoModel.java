@@ -152,10 +152,12 @@ public class FuegoModel extends Canvas implements Runnable {
         for (int fila = 0; fila < data.length - 1; fila++) {
             for (int columna = 0; columna < data[fila].length; columna++) {
                 //VALOR MODIFICABLE EN UN SLIDER
-
+                Random random= new Random();
+                if (random.nextBoolean()){
                 double temperatura = data[fila][columna] * pixelarriba;
                 //abajo
                 temperatura += data[fila + 1][columna] * 0.5;
+
                 if (columna < data[fila + 1].length - 1) {
                     //izquierda
                     temperatura += data[fila + 1][columna + 1] * 0.15;
@@ -165,6 +167,10 @@ public class FuegoModel extends Canvas implements Runnable {
                     temperatura += data[fila + 1][columna - 1] * 0.15;
                 }
                 data[fila][columna] = temperatura;
+            }
+                else if (data[fila][columna] > 11){
+                    data[fila][columna]-=10;
+                }
             }
 
            // System.out.println(" ");
@@ -199,7 +205,7 @@ public class FuegoModel extends Canvas implements Runnable {
             Pintar(getGraphics());
             repaint();
             frames++;
-            if (frames == 100){
+            if (frames == 500){
                 data = new double[size][size];
                 frames=0;
             }
