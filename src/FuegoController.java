@@ -8,6 +8,22 @@ public class FuegoController implements Runnable{
     }
 
     private double pixelarriba;
+    private double pixelabajo;
+    private double pixelizquierda;
+
+    public void setPixelabajo(double pixelabajo) {
+        this.pixelabajo = pixelabajo;
+    }
+
+    public void setPixelizquierda(double pixelizquierda) {
+        this.pixelizquierda = pixelizquierda;
+    }
+
+    public void setPixelderecha(double pixelderecha) {
+        this.pixelderecha = pixelderecha;
+    }
+
+    private double pixelderecha;
 
     public void setInicio(int inicio) {
         this.inicio = inicio;

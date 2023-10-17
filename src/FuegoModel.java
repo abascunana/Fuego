@@ -17,7 +17,6 @@ public class FuegoModel extends Canvas implements Runnable {
     private int inicio;
     private double pixelarriba;
     int size;
-    int frames;
     private Color colorFr;
     private FuegoView fuegoView;
     private FuegoController fuegoController;
@@ -135,18 +134,23 @@ public class FuegoModel extends Canvas implements Runnable {
         // Temperature matrix
         //controlar tamaño con variable
         // Fire points initialization
+
         for (int columna = 0; columna < data[0].length; columna++) {
             int porciento = r.nextInt(101);
+
             //Slider modifiable value
             if (porciento <= inicio) {
                 if (!deadFire) {
                     data[data.length - 1][columna] = 255;
+
                 }
                 else {
                     LimpiarMatriz();
                 }
+                
             }
         }
+
         //i = file j = columna )
         // Fire propagation
         for (int fila = 0; fila < data.length - 1; fila++) {
@@ -168,18 +172,14 @@ public class FuegoModel extends Canvas implements Runnable {
                 }
                 data[fila][columna] = temperatura;
             }
-                else if (data[fila][columna] > 11){
-                    data[fila][columna]-=10;
+                else if (data[fila][columna] > 50){
+                    data[fila][columna]-=7;
                 }
             }
 
            // System.out.println(" ");
         }
-        try {
-            Thread.sleep(10);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
+
         //Pintar píxeles
         for (int fila = 0; fila < data.length; fila++) {
             for (int columna = 0; columna < data[fila].length; columna++) {
@@ -204,11 +204,7 @@ public class FuegoModel extends Canvas implements Runnable {
 
             Pintar(getGraphics());
             repaint();
-            frames++;
-            if (frames == 500){
-                data = new double[size][size];
-                frames=0;
-            }
+
 
 
         }
