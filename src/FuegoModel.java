@@ -82,7 +82,6 @@ public class FuegoModel extends Canvas implements Runnable {
                 sumaazul++;
             }
 
-
             Color color = new Color(sumarojo, sumaverde, sumaazul, alpha);
             colors[i] = color;
         }
@@ -142,8 +141,8 @@ public class FuegoModel extends Canvas implements Runnable {
             if (porciento <= inicio) {
                 if (!deadFire) {
                     data[data.length - 1][columna] = 255;
-
                 }
+
                 else {
                     LimpiarMatriz();
                 }
@@ -188,7 +187,7 @@ public class FuegoModel extends Canvas implements Runnable {
 
             }
         }
-        //Double buffer attempt
+
         canvasGraphics.drawImage(imagetemp, 200, 0, null);
 
 
